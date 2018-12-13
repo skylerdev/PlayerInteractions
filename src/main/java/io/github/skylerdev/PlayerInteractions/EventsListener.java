@@ -3,57 +3,67 @@ package io.github.skylerdev.PlayerInteractions;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class EventsListener implements Listener {
 
     private FileConfiguration config;
-
-    private String senderString;
-    private String command;
+    private PlayerInteractions plugin;
 
     public EventsListener(PlayerInteractions plugin) {
+        this.plugin = plugin;
         config = plugin.getConfig();
 
-        senderString = config.getString("sender");
-        command = config.getString("command");
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onClick(PlayerInteractEntityEvent event) {
         Player sourcep = event.getPlayer();
-        org.bukkit.entity.Entity entity = event.getRightClicked();
+        Entity clickedEntity = event.getRightClicked();
+        
+        if ((clickedEntity instanceof Player) && event.getHand().equals(EquipmentSlot.HAND)) {
+            Player destp = (Player) clickedEntity;
+            if (destp.hasPermission("playerinteractions.interact")) {
+                
+                String command = config.getString("command");
+                String senderString = config.getString("sender");
+                
+                command = command.replace("{clicker}", sourcep.getName());
+                command = command.replace("{clicked}", destp.getName());
 
-        if (entity instanceof Player) {
-            Player destp = (Player) entity;
+                
+                // TODO: clicked bug? or just ! bug
+                // TODO: timeout
 
-            command.replace("{clicker}", destp.toString());
-            command.replace("{clicked}", sourcep.toString());
-            //TODO: clicked bug? or just ! bug
-            //TODO: timeout 
-            
-            //TODO: test all cases
-            
+                // TODO: test all cases
 
-            CommandSender sender;
-            if (senderString.equals("console")) {
-                sender = Bukkit.getConsoleSender();
-            } else if (senderString.equals("clicker")) {
-                sender = (CommandSender) sourcep;
-            } else if (senderString.equals("clicked")) {
-                sender = (CommandSender) destp;
-            } else {
-                Bukkit.getConsoleSender().sendMessage("[PlayerInteractions] [ERROR]: Config value sender not defined properly");
-                return;
+                CommandSender sender;
+                if (senderString.equals("console")) {
+                    sender = Bukkit.getConsoleSender();
+                } else if (senderString.equals("clicker")) {
+                    sender = (CommandSender) sourcep;
+                } else if (senderString.equals("clicked")) {
+                     sender = (CommandSender) destp;
+                } else {
+                    Bukkit.getConsoleSender()
+                            .sendMessage("[PlayerInteractions] [ERROR]: Config value sender not defined properly");
+                    return;
+                }
+
+                Bukkit.dispatchCommand(sender, command);
+
             }
-
-            Bukkit.dispatchCommand(sender, command);
-
         }
 
+    }
+    
+    public void reload() {
+        config = plugin.getConfig();
     }
 
 }

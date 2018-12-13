@@ -4,7 +4,7 @@
 #replaces {clicked} with player who has been clicked
 #slashes not necessary
 
-command: me says Hello to {clicked}
+command: me says Hello to {clicked}  
 
 #Sender to run the command from.
 #valid values are:

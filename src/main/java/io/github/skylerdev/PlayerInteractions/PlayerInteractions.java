@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class PlayerInteractions extends JavaPlugin {
     
     public static final Logger LOGGER = Logger.getLogger("McWiki");
+    private static EventsListener eventListener;
     
     @Override
     public void onEnable() {
@@ -17,7 +18,8 @@ public class PlayerInteractions extends JavaPlugin {
         
         LOGGER.log(Level.INFO, "[PlayerInteractions] Loaded " + toString() + " successfully.");
         
-        getServer().getPluginManager().registerEvents(new EventsListener(this), this);
+        eventListener = new EventsListener(this);
+        getServer().getPluginManager().registerEvents(eventListener, this);
 
     }
     
@@ -44,7 +46,8 @@ public class PlayerInteractions extends JavaPlugin {
     }
     
     private void reload() {
-        getServer().getPluginManager().registerEvents(new EventsListener(this), this);
+        reloadConfig();
+        eventListener.reload();
     }
     
     public void displayHelp(CommandSender sender) {
