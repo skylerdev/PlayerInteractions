@@ -1,0 +1,14 @@
+
+#Command to run when a player right clicks another player.
+#replaces {clicking} with player right clicking
+#replaces {clicked} with player who has been clicked
+#slashes not necessary
+
+command: me says Hello to {clicked}
+
+#Sender to run the command from.
+#valid values are:
+#console clicker clicked
+
+sender: clicker
+

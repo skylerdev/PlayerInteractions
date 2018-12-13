@@ -1,0 +1,22 @@
+name: PlayerInteractions
+main: io.github.skylerdev.PlayerInteractions.PlayerInteractions
+version: 1.0
+api-version: 1.13
+description: A robust and complete mediawiki integration into the game.
+author: EdgyKid
+
+
+commands: 
+  playerinteractions:
+    usage: /playerinteractions
+    description: Meta information and help.
+    permission: playerinteractions.meta
+  
+  
+permissions:
+  playerinteractions.meta:
+    description: Permission for /playerinteractions
+    default: op
+  playerinteractions.interact:
+    description: Permission to interact with other players
+    default: true
